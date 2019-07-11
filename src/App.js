@@ -15,6 +15,7 @@ import PlannerDetails from "./components/planner/PlannerDetails";
 import DailyList from "./components/daily/DailyList";
 import SignIn from "./components/auth/SignIn";
 import Register from "./components/auth/Register";
+import ItemDetails from "./components/tplegendary/ItemDetails";
 
 class App extends Component {
     render() {
@@ -32,6 +33,7 @@ class App extends Component {
                         <Route exact path='/plans/:id' component={PlannerDetails}/>
                         <Route exact path='/newplan' component={NewPlanner}/>
                         <Route exact path='/legendary' component={TradeList}/>
+                        <Route path='/legendary/:id' component={ItemDetails}/>
                         <Route exact path='/boss' component={WBossList}/>
                         <Footer/>
                     </Container>
