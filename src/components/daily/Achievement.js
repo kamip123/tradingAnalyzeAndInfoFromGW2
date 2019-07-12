@@ -15,7 +15,7 @@ class Achievement extends Component {
                             <Typography variant="h4" align="center">
                                 {this.props.achi.name}
                             </Typography>
-                            <Typography variant="textSecondary" component="h2" align="center">
+                            <Typography variant="subtitle1" component="h2" align="center">
                                 {this.props.achi.description}
                             </Typography>
                         </Box>

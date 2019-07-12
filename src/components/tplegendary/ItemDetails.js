@@ -18,7 +18,36 @@ class ItemDetails extends Component {
         buyAVG: [],
         quantity: [],
         selectYear: 2019,
-        rawData: []
+        rawData: [],
+        itemDetails: {
+            chat_link: "",
+            default_skin: null,
+            details: {
+                damage_type: "",
+                defense: 0,
+                max_power: 1155,
+                min_power: 1045,
+                secondary_suffix_item_id: "",
+                stat_choices: [],
+                suffix_item_id: null,
+                type: ""
+            },
+            flags: [],
+            game_types: [],
+            icon: "",
+            id: null,
+            level: null,
+            name: "",
+            rarity: "",
+            restrictions: [],
+            type: "",
+            vendor_value: null
+        },
+        price: {
+            buy: null,
+            sell: null,
+            quantity: null
+        }
     };
 
     constructor() {
@@ -46,7 +75,6 @@ class ItemDetails extends Component {
     }
 
     updateData = () => {
-        console.log(this.state.rawData);
         let sellAVGapi = [];
         let quantityAVGapi = [];
         let i = 0;
@@ -56,13 +84,12 @@ class ItemDetails extends Component {
         let tempItemQuantity = 0;
         let currentYear = 2018;
         while (i < this.state.rawData.length) {
-            let year = parseInt(this.state.rawData[i].listing_datetime.substr(0, 4));
-            let month = parseInt(this.state.rawData[i].listing_datetime.substr(5, 7)) - 1;
+            let year = parseInt(this.state.rawData[i].listing_datetime.substr(0, 4), 10);
+            let month = parseInt(this.state.rawData[i].listing_datetime.substr(5, 7), 10) - 1;
 
             if (currentYear !== year) {
                 i++;
                 if (i === this.state.rawData.length) {
-                    console.log('end if');
                     this.setState({
                         sellAVG: sellAVGapi,
                         quantity: quantityAVGapi
@@ -101,7 +128,6 @@ class ItemDetails extends Component {
                         x: new Date(year, tempMonth),
                         y: tempResultsValue / tempResultsQuantity
                     });
-                    console.log('end else');
                     this.setState({
                         sellAVG: sellAVGapi,
                         quantity: quantityAVGapi
@@ -113,15 +139,18 @@ class ItemDetails extends Component {
     };
 
     async getData() {
+
+        const {id} = this.props.match.params;
+
         let itemData = [];
         let promises = [];
 
-        axios.get('http://www.gw2spidy.com/api/v0.9/json/listings/' + this.props.location.state.details.id + '/sell')
+        axios.get('http://www.gw2spidy.com/api/v0.9/json/listings/' + id + '/sell')
             .then(res => {
                 itemData = res.data.results;
-                if (parseInt(res.data.last_page) > 1) {
+                if (parseInt(res.data.last_page, 10) > 1) {
                     for (let i = 2; i < res.data.last_page + 1; i++) {
-                        promises.push(axios.get('http://www.gw2spidy.com/api/v0.9/json/listings/' + this.props.location.state.details.id + '/sell/' + i)
+                        promises.push(axios.get('http://www.gw2spidy.com/api/v0.9/json/listings/' + id + '/sell/' + i)
                             .then(res => {
                                 itemData = [...itemData, ...res.data.results]
                             }))
@@ -148,60 +177,24 @@ class ItemDetails extends Component {
     }
 
     componentDidMount() {
-        let quantity = [
-            {x: new Date(2019, 0), y: 30},
-            {x: new Date(2019, 1), y: 40},
-            {x: new Date(2019, 2), y: 50},
-            {x: new Date(2019, 3), y: 40},
-            {x: new Date(2019, 4), y: 30},
-            {x: new Date(2019, 5), y: 37},
-            {x: new Date(2019, 6), y: 32},
-            {x: new Date(2019, 7), y: 27},
-            {x: new Date(2019, 8), y: 29},
-            {x: new Date(2019, 9), y: 43},
-            {x: new Date(2019, 10), y: 55},
-            {x: new Date(2019, 11), y: 39}
-        ];
+        const {id} = this.props.match.params;
 
-        let buyAVG = [
-            {x: new Date(2019, 0), y: 38000},
-            {x: new Date(2019, 1), y: 39000},
-            {x: new Date(2019, 2), y: 35000},
-            {x: new Date(2019, 3), y: 37000},
-            {x: new Date(2019, 4), y: 42000},
-            {x: new Date(2019, 5), y: 48000},
-            {x: new Date(2019, 6), y: 41000},
-            {x: new Date(2019, 7), y: 38000},
-            {x: new Date(2019, 8), y: 42000},
-            {x: new Date(2019, 9), y: 45000},
-            {x: new Date(2019, 10), y: 48000},
-            {x: new Date(2019, 11), y: 47000}
-        ];
-
-        let sellAVG = [
-            {x: new Date(2019, 0), y: 11500},
-            {x: new Date(2019, 1), y: 10500},
-            {x: new Date(2019, 2), y: 9000},
-            {x: new Date(2019, 3), y: 13500},
-            {x: new Date(2019, 4), y: 13890},
-            {x: new Date(2019, 5), y: 18500},
-            {x: new Date(2019, 6), y: 16000},
-            {x: new Date(2019, 7), y: 14500},
-            {x: new Date(2019, 8), y: 15880},
-            {x: new Date(2019, 9), y: 24000},
-            {x: new Date(2019, 10), y: 31000},
-            {x: new Date(2019, 11), y: 19000}
-        ];
-
-
+        if (typeof (this.props.location.state) === 'undefined') {
+            console.log('empty');
+            axios.get('https://api.guildwars2.com/v2/items?ids=' + id + '&lang=en')
+                .then(res => {
+                    console.log(res.data[0]);
+                    this.setState({
+                        itemDetails: res.data[0]
+                    });
+                })
+        } else {
+            this.setState({
+                itemDetails: this.props.location.state.details
+            });
+        }
 
         this.getData();
-
-        this.setState({
-            sellAVG,
-            buyAVG,
-            quantity
-        })
     }
 
     render() {
@@ -262,7 +255,6 @@ class ItemDetails extends Component {
                 dataPoints: this.state.sellAVG
             }]
         };
-        console.log(this.props.location.state.details);
         return (
             <Grid item xs={12}>
                 <Box borderBottom={1} p={2}>
@@ -277,8 +269,8 @@ class ItemDetails extends Component {
                             <Grid item xs={12}>
                                 <Box borderBottom={1} p={1} m={1}>
                                     <Typography variant="h4" align="center">
-                                        {this.props.location.state.details.details.name}
-                                        <img className="image" src={this.props.location.state.details.details.icon}/>
+                                        {this.state.itemDetails.name}
+                                        <img className="image" src={this.state.itemDetails.icon} alt="icon"/>
                                     </Typography>
                                 </Box>
                             </Grid>
@@ -291,38 +283,40 @@ class ItemDetails extends Component {
                                     spacing={1}
                                 >
                                     <table>
-                                        <tr>
-                                            <th>Rarity:</th>
-                                            <td>{this.props.location.state.details.rarity}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Type:</th>
-                                            <td>{this.props.location.state.details.type} - {this.props.location.state.details.details.type}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Damage:</th>
-                                            <td>{this.props.location.state.details.details.min_power} - {this.props.location.state.details.details.max_power}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Level:</th>
-                                            <td>{this.props.location.state.details.level}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Chat Link:</th>
-                                            <td>{this.props.location.state.details.chat_link}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Buy:</th>
-                                            <td>{this.props.location.state.price.buy}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Sell:</th>
-                                            <td>{this.props.location.state.price.sell}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Quantity:</th>
-                                            <td>{this.props.location.state.price.quantity}</td>
-                                        </tr>
+                                        <tbody>
+                                            <tr>
+                                                <th>Rarity:</th>
+                                                <td>{this.state.itemDetails.rarity}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Type:</th>
+                                                <td>{this.state.itemDetails.type} - {this.state.itemDetails.details.type}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Damage:</th>
+                                                <td>{this.state.itemDetails.details.min_power} - {this.state.itemDetails.details.max_power}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Level:</th>
+                                                <td>{this.state.itemDetails.level}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Chat Link:</th>
+                                                <td>{this.state.itemDetails.chat_link}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Buy:</th>
+                                                <td>{this.state.price.buy}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Sell:</th>
+                                                <td>{this.state.price.sell}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Quantity:</th>
+                                                <td>{this.state.price.quantity}</td>
+                                            </tr>
+                                        </tbody>
                                     </table>
                                 </Grid>
                             </Grid>

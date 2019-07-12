@@ -3,6 +3,7 @@ import Grid from "@material-ui/core/Grid";
 import Card from "@material-ui/core/Card";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
+import {NavLink} from "react-router-dom";
 
 class Item extends Component {
     render() {
@@ -27,11 +28,29 @@ class Item extends Component {
                                         spacing={1}
                                     >
                                         <Box p={1} m={1}>
-                                            <Typography variant="h4" align="center">
-                                                {this.props.details.name}
-                                            </Typography>
+                                            <NavLink to={{
+                                                pathname: '/legendary/' + this.props.details.id,
+                                                state: {
+                                                    details: this.props.details,
+                                                    price: {buy: 10, sell: 10, quantity: 10}
+                                                }
+                                            }} style={{textDecoration: 'none', color: 'black'}}>
+
+                                                <Typography variant="h4" align="center">
+                                                    {this.props.details.name}
+                                                </Typography>
+                                            </NavLink>
                                         </Box>
-                                    <img className="image" src={this.props.details.icon}/>
+                                        <NavLink to={{
+                                            pathname: '/legendary/' + this.props.details.id,
+                                            state: {
+                                                details: this.props.details,
+                                                price: {buy: 10, sell: 10, quantity: 10}
+                                            }
+                                        }} style={{textDecoration: 'none', color: 'black'}}>
+                                            <img className="image" src={this.props.details.icon} alt="icon"/>
+                                        </NavLink>
+
                                     </Grid>
                                 </Box>
                             </Grid>
@@ -44,6 +63,7 @@ class Item extends Component {
                                     spacing={1}
                                 >
                                     <table>
+                                        <tbody>
                                         <tr>
                                             <th>Rarity:</th>
                                             <td>{this.props.details.rarity}</td>
@@ -76,6 +96,7 @@ class Item extends Component {
                                             <th>Quantity:</th>
                                             <td>{this.props.price.quantity}</td>
                                         </tr>
+                                        </tbody>
                                     </table>
                                 </Grid>
                             </Grid>

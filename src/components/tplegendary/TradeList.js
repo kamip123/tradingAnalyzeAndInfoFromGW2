@@ -2,12 +2,10 @@ import {Component} from "react";
 import React from "react";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
-import ItemDetails from "./ItemDetails";
 import Item from "./Item";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import axios from "axios";
-import {NavLink} from "react-router-dom";
 
 class TradeList extends Component {
 
@@ -52,7 +50,6 @@ class TradeList extends Component {
                     this.setState({
                         itemsData
                     });
-                    console.log(itemsData)
                 })
         }
     }
@@ -61,7 +58,9 @@ class TradeList extends Component {
 
         let items = this.state.itemsData.length ? (
             this.state.itemsData.map(details => {
-                return (<NavLink to={{ pathname: '/legendary/' + details.id, state: { details: details, price: {buy: 10, sell: 10, quantity: 10}} }} style={{ textDecoration: 'none', color: 'white' }}><Item details={details} price={{buy: 10, sell: 10, quantity: 10}}/></NavLink>)
+                return (
+                    <Item details={details} price={{buy: 10, sell: 10, quantity: 10}} key={details.id}/>
+                )
             })
         ) : (
             <p>Encountered and error, please try refreshing the page.</p>

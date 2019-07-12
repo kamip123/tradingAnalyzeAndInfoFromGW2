@@ -13,7 +13,7 @@ class Info extends Component {
                     <Grid
                         container
                         direction="row"
-                        justify="left"
+                        justify="flex-start"
                         alignItems="center"
                         spacing={1}
 

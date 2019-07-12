@@ -34,50 +34,60 @@ class DailyList extends Component {
                 });
 
                 for(let i=0;i<this.state.questsPVE.length;i++){
-                    axios.get('https://api.guildwars2.com/v2/achievements?ids=' + this.state.questsPVE[i].id + '&lang=en')
-                        .then(res => {
-                            let questsPVEd = [...this.state.questsPVEd, res.data[0]];
-                            this.setState({
-                                questsPVEd: questsPVEd
-                            })
-                        });
+                    if(this.state.questsPVE[i].level.max === 80){
+                        axios.get('https://api.guildwars2.com/v2/achievements?ids=' + this.state.questsPVE[i].id + '&lang=en')
+                            .then(res => {
+                                let questsPVEd = [...this.state.questsPVEd, res.data[0]];
+                                this.setState({
+                                    questsPVEd: questsPVEd
+                                })
+                            });
+                    }
                 }
 
                 for(let i=0;i<this.state.questsPVP.length;i++){
-                    axios.get('https://api.guildwars2.com/v2/achievements?ids=' + this.state.questsPVP[i].id + '&lang=en')
-                        .then(res => {
-                            let questsPVPd = [...this.state.questsPVPd, res.data[0]];
-                            this.setState({
-                                questsPVPd: questsPVPd
-                            })
-                        });
+                    if(this.state.questsPVP[i].level.max === 80) {
+                        axios.get('https://api.guildwars2.com/v2/achievements?ids=' + this.state.questsPVP[i].id + '&lang=en')
+                            .then(res => {
+                                let questsPVPd = [...this.state.questsPVPd, res.data[0]];
+                                this.setState({
+                                    questsPVPd: questsPVPd
+                                })
+                            });
+                    }
                 }
                 for(let i=0;i<this.state.questsWVW.length;i++){
-                    axios.get('https://api.guildwars2.com/v2/achievements?ids=' + this.state.questsWVW[i].id + '&lang=en')
-                        .then(res => {
-                            let questsWVWd = [...this.state.questsWVWd, res.data[0]];
-                            this.setState({
-                                questsWVWd: questsWVWd
-                            })
-                        });
+                    if(this.state.questsWVW[i].level.max === 80) {
+                        axios.get('https://api.guildwars2.com/v2/achievements?ids=' + this.state.questsWVW[i].id + '&lang=en')
+                            .then(res => {
+                                let questsWVWd = [...this.state.questsWVWd, res.data[0]];
+                                this.setState({
+                                    questsWVWd: questsWVWd
+                                })
+                            });
+                    }
                 }
                 for(let i=0;i<this.state.questsFRACTALS.length;i++){
-                    axios.get('https://api.guildwars2.com/v2/achievements?ids=' + this.state.questsFRACTALS[i].id + '&lang=en')
-                        .then(res => {
-                            let questsFRACTALSd = [...this.state.questsFRACTALSd, res.data[0]];
-                            this.setState({
-                                questsFRACTALSd: questsFRACTALSd
-                            })
-                        });
+                    if(this.state.questsFRACTALS[i].level.max === 80) {
+                        axios.get('https://api.guildwars2.com/v2/achievements?ids=' + this.state.questsFRACTALS[i].id + '&lang=en')
+                            .then(res => {
+                                let questsFRACTALSd = [...this.state.questsFRACTALSd, res.data[0]];
+                                this.setState({
+                                    questsFRACTALSd: questsFRACTALSd
+                                })
+                            });
+                    }
                 }
                 for(let i=0;i<this.state.questsSPECIALd.length;i++){
-                    axios.get('https://api.guildwars2.com/v2/achievements?ids=' + this.state.questsFRACTALS[i].id + '&lang=en')
-                        .then(res => {
-                            let questsSPECIALd = [...this.state.questsSPECIALd, res.data[0]];
-                            this.setState({
-                                questsSPECIALd: questsSPECIALd
+                    if(this.state.questsSPECIALd[i].level.max === 80) {
+                        axios.get('https://api.guildwars2.com/v2/achievements?ids=' + this.state.questsFRACTALS[i].id + '&lang=en')
+                            .then(res => {
+                                let questsSPECIALd = [...this.state.questsSPECIALd, res.data[0]];
+                                this.setState({
+                                    questsSPECIALd: questsSPECIALd
+                                });
                             });
-                        });
+                    }
                 }
 
             }).catch((error) => {
@@ -86,8 +96,6 @@ class DailyList extends Component {
     }
 
     handleChange = (event, newValue) => {
-        console.log(event);
-        console.log(newValue);
         this.setState({
             value: newValue
         })
@@ -102,7 +110,7 @@ class DailyList extends Component {
 
         let fractals = this.state.questsFRACTALSd.length ? (
             this.state.questsFRACTALSd.map(achi => {
-                return(<Achievement achi={achi}/>)
+                return(<Achievement achi={achi} key={achi.id}/>)
             })
         ) : (
             FractalLength = true
@@ -110,7 +118,7 @@ class DailyList extends Component {
 
         let pve = this.state.questsPVEd.length ? (
             this.state.questsPVEd.map(achi => {
-                return(<Achievement achi={achi}/>)
+                return(<Achievement achi={achi} key={achi.id}/>)
             })
         ) : (
             PVELength = true
@@ -118,7 +126,7 @@ class DailyList extends Component {
 
         let pvp = this.state.questsPVPd.length ? (
             this.state.questsPVPd.map(achi => {
-                return(<Achievement achi={achi}/>)
+                return(<Achievement achi={achi} key={achi.id}/>)
             })
         ) : (
             PVPLength = true
@@ -126,7 +134,7 @@ class DailyList extends Component {
 
         let wvw = this.state.questsWVWd.length ? (
             this.state.questsWVWd.map(achi => {
-                return(<Achievement achi={achi}/>)
+                return(<Achievement achi={achi} key={achi.id}/>)
             })
         ) : (
             WVWLength = true
@@ -134,7 +142,7 @@ class DailyList extends Component {
 
         let special = this.state.questsSPECIALd.length ? (
             this.state.questsSPECIALd.map(achi => {
-                return(<Achievement achi={achi}/>)
+                return(<Achievement achi={achi} key={achi.id}/>)
             })
         ) : (
             specialLength = true

@@ -49,7 +49,6 @@ class Home extends Component {
                     <Grid
                         container
                         direction="row"
-                        alignItems="top"
                         spacing={1}
                     >
                         <Grid item xs={8}>
