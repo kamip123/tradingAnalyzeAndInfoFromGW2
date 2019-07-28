@@ -13,21 +13,21 @@ const initState = {
         tag: '',
         emblem: {
             background: {
-                id: 5,
+                id: 0,
                 colors: [
-                    443
+                    0
                 ]
             },
             foreground: {
-                id: 151,
+                id: 0,
                 colors: [
-                    473,
-                    673
+                    0,
+                    0
                 ]
             },
             flags: [
-                "FlipBackgroundHorizontal",
-                "FlipForegroundHorizontal"
+                '',
+                ''
             ]
         }
     }

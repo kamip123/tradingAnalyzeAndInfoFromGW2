@@ -8,6 +8,10 @@ import "./Item.css"
 
 import CanvasJSReact from '../canvasJS/canvasjs.react';
 import axios from "axios";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormControl from "@material-ui/core/FormControl";
+import InputLabel from "@material-ui/core/InputLabel";
+import Select from "@material-ui/core/Select";
 
 let CanvasJS = CanvasJSReact.CanvasJS;
 let CanvasJSChart = CanvasJSReact.CanvasJSChart;
@@ -19,14 +23,15 @@ class ItemDetails extends Component {
         quantity: [],
         selectYear: 2019,
         rawData: [],
+        rawBuyData: [],
         itemDetails: {
             chat_link: "",
             default_skin: null,
             details: {
                 damage_type: "",
                 defense: 0,
-                max_power: 1155,
-                min_power: 1045,
+                max_power: null,
+                min_power: null,
                 secondary_suffix_item_id: "",
                 stat_choices: [],
                 suffix_item_id: null,
@@ -44,10 +49,17 @@ class ItemDetails extends Component {
             vendor_value: null
         },
         price: {
-            buy: null,
-            sell: null,
-            quantity: null
-        }
+            id: null,
+            whitelisted: false,
+            buys: {
+                quantity: null,
+                unit_price: null
+            },
+            sells: {
+                quantity: null,
+                unit_price: null
+            }
+        },
     };
 
     constructor() {
@@ -74,68 +86,100 @@ class ItemDetails extends Component {
         this.chart.render();
     }
 
-    updateData = () => {
+    updateData = (currentYear = 2019) => {
         let sellAVGapi = [];
         let quantityAVGapi = [];
+
         let i = 0;
-        let tempMonth = 11;
         let tempResultsQuantity = 0;
         let tempResultsValue = 0;
         let tempItemQuantity = 0;
-        let currentYear = 2018;
-        while (i < this.state.rawData.length) {
-            let year = parseInt(this.state.rawData[i].listing_datetime.substr(0, 4), 10);
-            let month = parseInt(this.state.rawData[i].listing_datetime.substr(5, 7), 10) - 1;
 
-            if (currentYear !== year) {
-                i++;
-                if (i === this.state.rawData.length) {
-                    this.setState({
-                        sellAVG: sellAVGapi,
-                        quantity: quantityAVGapi
-                    });
-                }
-            } else {
-                if (tempMonth !== month) {
-                    tempMonth = month;
-                    if (tempResultsQuantity === 0) {
-                        sellAVGapi.push({
-                            x: new Date(year, tempMonth),
-                            y: 0
-                        });
-                        quantityAVGapi.push({
-                            x: new Date(year, tempMonth),
-                            y: 0
-                        })
-                    } else {
-                        sellAVGapi.push({
-                            x: new Date(year, tempMonth),
-                            y: tempResultsValue / tempResultsQuantity
-                        });
-                        quantityAVGapi.push({
-                            x: new Date(year, tempMonth),
-                            y: tempItemQuantity / tempResultsQuantity
-                        })
+        for (let j = 0; j < 12; j++) {
+            while (i < this.state.rawData.length) {
+                let year = parseInt(this.state.rawData[i].listing_datetime.substr(0, 4), 10);
+                let month = parseInt(this.state.rawData[i].listing_datetime.substr(5, 7), 10) - 1;
+
+                if (currentYear === year) {
+                    if (j === month) {
+                        tempResultsQuantity++;
+                        tempResultsValue += this.state.rawData[i].unit_price;
+                        tempItemQuantity += this.state.rawData[i].quantity;
                     }
-
                 }
-                tempResultsQuantity++;
-                tempResultsValue += this.state.rawData[i].unit_price;
-                tempItemQuantity += this.state.rawData[i].quantity;
                 i++;
-                if (i === this.state.rawData.length) {
-                    sellAVGapi.push({
-                        x: new Date(year, tempMonth),
-                        y: tempResultsValue / tempResultsQuantity
-                    });
-                    this.setState({
-                        sellAVG: sellAVGapi,
-                        quantity: quantityAVGapi
-                    });
-                }
             }
+            if (tempResultsQuantity === 0) {
+                sellAVGapi.push({
+                    x: new Date(currentYear, j),
+                    y: 0
+                });
+                quantityAVGapi.push({
+                    x: new Date(currentYear, j),
+                    y: 0
+                });
+            } else {
+                sellAVGapi.push({
+                    x: new Date(currentYear, j),
+                    y: tempResultsValue / tempResultsQuantity
+                });
+                quantityAVGapi.push({
+                    x: new Date(currentYear, j),
+                    y: tempItemQuantity / tempResultsQuantity
+                });
+            }
+            i = 0;
+            tempResultsQuantity = 0;
+            tempResultsValue = 0;
+            tempItemQuantity = 0;
         }
+        console.log(sellAVGapi);
+        this.setState({
+            sellAVG: sellAVGapi,
+            quantity: quantityAVGapi
+        });
+    };
 
+    updateBuyData = (currentYear = 2019) => {
+        let buyAVGapi = [];
+
+        let i = 0;
+        let tempResultsQuantity = 0;
+        let tempResultsValue = 0;
+
+
+        for (let j = 0; j < 12; j++) {
+            while (i < this.state.rawBuyData.length) {
+                let year = parseInt(this.state.rawBuyData[i].listing_datetime.substr(0, 4), 10);
+                let month = parseInt(this.state.rawBuyData[i].listing_datetime.substr(5, 7), 10) - 1;
+
+                if (currentYear === year) {
+                    if (j === month) {
+                        tempResultsQuantity++;
+                        tempResultsValue += this.state.rawBuyData[i].unit_price;
+                    }
+                }
+                i++;
+            }
+            if (tempResultsQuantity === 0) {
+                buyAVGapi.push({
+                    x: new Date(currentYear, j),
+                    y: 0
+                });
+            } else {
+                buyAVGapi.push({
+                    x: new Date(currentYear, j),
+                    y: tempResultsValue / tempResultsQuantity
+                });
+            }
+            i = 0;
+            tempResultsQuantity = 0;
+            tempResultsValue = 0;
+        }
+        console.log(buyAVGapi);
+        this.setState({
+            buyAVG: buyAVGapi
+        });
     };
 
     async getData() {
@@ -144,6 +188,9 @@ class ItemDetails extends Component {
 
         let itemData = [];
         let promises = [];
+
+        let itemDataBuy = [];
+        let promisesBuy = [];
 
         axios.get('http://www.gw2spidy.com/api/v0.9/json/listings/' + id + '/sell')
             .then(res => {
@@ -173,6 +220,33 @@ class ItemDetails extends Component {
 
             });
 
+        axios.get('http://www.gw2spidy.com/api/v0.9/json/listings/' + id + '/buy')
+            .then(res => {
+                itemDataBuy = res.data.results;
+                if (parseInt(res.data.last_page, 10) > 1) {
+                    for (let i = 2; i < res.data.last_page + 1; i++) {
+                        promisesBuy.push(axios.get('http://www.gw2spidy.com/api/v0.9/json/listings/' + id + '/buy/' + i)
+                            .then(res => {
+                                itemDataBuy = [...itemDataBuy, ...res.data.results]
+                            }))
+                    }
+                    axios.all(promisesBuy)
+                        .then(
+                            () => {
+                                this.setState({
+                                    rawBuyData: itemDataBuy
+                                });
+                                this.updateBuyData();
+                            }
+                        );
+                } else {
+                    this.setState({
+                        rawBuyData: itemDataBuy
+                    });
+                    this.updateBuyData();
+                }
+
+            });
 
     }
 
@@ -180,24 +254,52 @@ class ItemDetails extends Component {
         const {id} = this.props.match.params;
 
         if (typeof (this.props.location.state) === 'undefined') {
-            console.log('empty');
             axios.get('https://api.guildwars2.com/v2/items?ids=' + id + '&lang=en')
                 .then(res => {
-                    console.log(res.data[0]);
                     this.setState({
                         itemDetails: res.data[0]
+                    });
+                });
+            axios.get('https://api.guildwars2.com/v2/commerce/prices/' + id)
+                .then(res => {
+                    this.setState({
+                        price: res.data
                     });
                 })
         } else {
             this.setState({
-                itemDetails: this.props.location.state.details
+                itemDetails: this.props.location.state.details,
+                price: this.props.location.state.price
             });
         }
 
         this.getData();
     }
 
+    handleChange = (event) => {
+        console.log(event);
+        this.setState({
+            [event.target.name]: event.target.value
+        });
+        if (event.target.name === "selectYear") {
+            this.updateData(event.target.value);
+            this.updateBuyData(event.target.value);
+        }
+    };
+
     render() {
+        let thisYear = (new Date()).getFullYear();
+        let allYears = [];
+        for (let x = 2013; x <= thisYear; x++) {
+            allYears.push(x)
+        }
+
+        const yearList = allYears.map((x) => {
+            return (
+                <MenuItem value={x}>{x}</MenuItem>
+            )
+        });
+
         const options = {
             animationEnabled: true,
             colorSet: "colorSet2",
@@ -217,10 +319,10 @@ class ItemDetails extends Component {
             },
             axisY2: {
                 title: "Quantity",
-                titleFontColor: "#51CDA0",
-                lineColor: "#51CDA0",
-                labelFontColor: "#51CDA0",
-                tickColor: "#51CDA0",
+                titleFontColor: "#6d78ad",
+                lineColor: "#6d78ad",
+                labelFontColor: "#6d78ad",
+                tickColor: "#6d78ad",
                 includeZero: true
             },
             toolTip: {
@@ -246,10 +348,8 @@ class ItemDetails extends Component {
                 yValueFormatString: "$#,##0",
                 dataPoints: this.state.buyAVG
             }, {
-                type: "area",
+                type: "line",
                 name: "Sell Offers Avg",
-                markerBorderColor: "white",
-                markerBorderThickness: 2,
                 showInLegend: true,
                 yValueFormatString: "$#,##0",
                 dataPoints: this.state.sellAVG
@@ -284,43 +384,58 @@ class ItemDetails extends Component {
                                 >
                                     <table>
                                         <tbody>
-                                            <tr>
-                                                <th>Rarity:</th>
-                                                <td>{this.state.itemDetails.rarity}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Type:</th>
-                                                <td>{this.state.itemDetails.type} - {this.state.itemDetails.details.type}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Damage:</th>
-                                                <td>{this.state.itemDetails.details.min_power} - {this.state.itemDetails.details.max_power}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Level:</th>
-                                                <td>{this.state.itemDetails.level}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Chat Link:</th>
-                                                <td>{this.state.itemDetails.chat_link}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Buy:</th>
-                                                <td>{this.state.price.buy}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Sell:</th>
-                                                <td>{this.state.price.sell}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Quantity:</th>
-                                                <td>{this.state.price.quantity}</td>
-                                            </tr>
+                                        <tr>
+                                            <th>Rarity:</th>
+                                            <td>{this.state.itemDetails.rarity}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Type:</th>
+                                            <td>{this.state.itemDetails.type} - {this.state.itemDetails.details.type}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Damage:</th>
+                                            <td>{this.state.itemDetails.details.min_power} - {this.state.itemDetails.details.max_power}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Level:</th>
+                                            <td>{this.state.itemDetails.level}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Chat Link:</th>
+                                            <td>{this.state.itemDetails.chat_link}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Buy:</th>
+                                            <td>{this.state.price.buys.unit_price}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Sell:</th>
+                                            <td>{this.state.price.sells.unit_price}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Quantity:</th>
+                                            <td>{this.state.price.sells.quantity}</td>
+                                        </tr>
                                         </tbody>
                                     </table>
                                 </Grid>
                             </Grid>
                             <Grid item xs={12} md={8}>
+                                <FormControl variant="outlined">
+                                    <InputLabel htmlFor="selectYear">
+                                        Year
+                                    </InputLabel>
+                                    <Select
+                                        value={this.state.selectYear}
+                                        onChange={this.handleChange}
+                                        inputProps={{
+                                            name: 'selectYear',
+                                            id: 'selectYear',
+                                        }}
+                                    >
+                                        {yearList}
+                                    </Select>
+                                </FormControl>
                                 <CanvasJSChart options={options} onRef={ref => this.chart = ref}/>
                             </Grid>
                         </Grid>
@@ -332,7 +447,3 @@ class ItemDetails extends Component {
 }
 
 export default ItemDetails;
-
-// todo
-// 1. Check if param undefined and then axios.get() else skip
-// 2. Change request id from props to route param

@@ -69,7 +69,7 @@ class Boss extends Component {
                                 alignItems="center"
                                 spacing={1}
                             >
-                                <div style={{position: 'relative', width: '100%', height: '50px'}}>
+                                <div style={{position: 'relative', width: '100%', height: '39px'}}>
                                     {timers}
                                 </div>
                             </Grid>

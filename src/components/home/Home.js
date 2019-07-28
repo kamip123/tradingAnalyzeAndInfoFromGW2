@@ -20,6 +20,7 @@ import {NavLink} from "react-router-dom";
 
 const mapStateToProps = (state) => {
     return {
+        isLoggedIn: state.firebase.auth.isEmpty,
         guildInfo: state.guild.guildInfo
     }
 };
@@ -43,15 +44,18 @@ class Home extends Component {
     }
 
     render() {
+        const isLoggedIn = !this.props.isLoggedIn;
         return (
             <Paper>
                 <div className="containerDiv">
                     <Grid
                         container
                         direction="row"
+                        justify="center"
+                        alignItems="flex-start"
                         spacing={1}
                     >
-                        <Grid item xs={8}>
+                        <Grid item xs={12} md={8}>
                             <Box m={1.4}>
                                 <MotDay motd={this.props.guildInfo.motd}/>
                             </Box>
@@ -67,105 +71,107 @@ class Home extends Component {
                                         >
                                             <Grid item xs={12}>
                                                 <Box borderBottom={1} pb={1} mb={2}>
-                                                <Typography variant="h3" align="center" component="h3">
-                                                    Functions
-                                                </Typography>
+                                                    <Typography variant="h3" align="center" component="h3">
+                                                        Functions
+                                                    </Typography>
                                                 </Box>
                                             </Grid>
                                             <Grid item xs={6} md={3}>
-                                                <NavLink to="/daily" style={{ textDecoration: 'none', color: 'black' }}>
-                                                <Grid
-                                                    container
-                                                    direction="row"
-                                                    justify="center"
-                                                    alignItems="center"
-                                                    spacing={1}
-                                                >
+                                                <NavLink to="/daily" style={{textDecoration: 'none', color: 'black'}}>
+                                                    <Grid
+                                                        container
+                                                        direction="row"
+                                                        justify="center"
+                                                        alignItems="center"
+                                                        spacing={1}
+                                                    >
 
-                                                    <img src={dailyAchievement} alt="daily achivement" height="70"
-                                                         width="70"/>
+                                                        <img src={dailyAchievement} alt="daily achivement" height="70"
+                                                             width="70"/>
 
-                                                    <Grid item xs={12}>
-                                                        <Typography className="creatorFooter" align="center"
-                                                                    variant="subtitle1"
-                                                                    gutterBottom
-                                                                    color="inherit">
-                                                            Daily Achievements
-                                                        </Typography>
+                                                        <Grid item xs={12}>
+                                                            <Typography className="creatorFooter" align="center"
+                                                                        variant="subtitle1"
+                                                                        gutterBottom
+                                                                        color="inherit">
+                                                                Daily Achievements
+                                                            </Typography>
+                                                        </Grid>
                                                     </Grid>
-                                                </Grid>
                                                 </NavLink>
                                             </Grid>
 
                                             <Grid item xs={6} md={3}>
-                                                <NavLink to="/plans" style={{ textDecoration: 'none', color: 'black' }}>
-                                                <Grid
-                                                    container
-                                                    direction="row"
-                                                    justify="center"
-                                                    alignItems="center"
-                                                    spacing={1}
-                                                >
+                                                <NavLink to="/plans" style={{textDecoration: 'none', color: 'black'}}>
+                                                    <Grid
+                                                        container
+                                                        direction="row"
+                                                        justify="center"
+                                                        alignItems="center"
+                                                        spacing={1}
+                                                    >
 
-                                                    <img src={plans} alt="plans" height="70" width="70"/>
+                                                        <img src={plans} alt="plans" height="70" width="70"/>
 
-                                                    <Grid item xs={12}>
-                                                        <Typography className="creatorFooter" align="center"
-                                                                    variant="subtitle1"
-                                                                    gutterBottom
-                                                                    color="inherit">
-                                                            Plans
-                                                        </Typography>
+                                                        <Grid item xs={12}>
+                                                            <Typography className="creatorFooter" align="center"
+                                                                        variant="subtitle1"
+                                                                        gutterBottom
+                                                                        color="inherit">
+                                                                Plans
+                                                            </Typography>
+                                                        </Grid>
                                                     </Grid>
-                                                </Grid>
                                                 </NavLink>
                                             </Grid>
 
                                             <Grid item xs={6} md={3}>
-                                                <NavLink to="/boss" style={{ textDecoration: 'none', color: 'black' }}>
-                                                <Grid
-                                                    container
-                                                    direction="row"
-                                                    justify="center"
-                                                    alignItems="center"
-                                                    spacing={1}
-                                                >
+                                                <NavLink to="/boss" style={{textDecoration: 'none', color: 'black'}}>
+                                                    <Grid
+                                                        container
+                                                        direction="row"
+                                                        justify="center"
+                                                        alignItems="center"
+                                                        spacing={1}
+                                                    >
 
-                                                    <img src={bosses} alt="bosses" height="70" width="70"/>
+                                                        <img src={bosses} alt="bosses" height="70" width="70"/>
 
-                                                    <Grid item xs={12}>
-                                                        <Typography className="creatorFooter" align="center"
-                                                                    variant="subtitle1"
-                                                                    gutterBottom
-                                                                    color="inherit">
-                                                            Boss Timer
-                                                        </Typography>
+                                                        <Grid item xs={12}>
+                                                            <Typography className="creatorFooter" align="center"
+                                                                        variant="subtitle1"
+                                                                        gutterBottom
+                                                                        color="inherit">
+                                                                Boss Timer
+                                                            </Typography>
+                                                        </Grid>
                                                     </Grid>
-                                                </Grid>
                                                 </NavLink>
                                             </Grid>
 
                                             <Grid item xs={6} md={3}>
-                                                <NavLink to="/legendary" style={{ textDecoration: 'none', color: 'black' }}>
-                                                <Grid
-                                                    container
-                                                    direction="row"
-                                                    justify="center"
-                                                    alignItems="center"
-                                                    spacing={1}
-                                                >
+                                                <NavLink to="/legendary"
+                                                         style={{textDecoration: 'none', color: 'black'}}>
+                                                    <Grid
+                                                        container
+                                                        direction="row"
+                                                        justify="center"
+                                                        alignItems="center"
+                                                        spacing={1}
+                                                    >
 
-                                                    <img src={blackLionLogo} alt="legendary" height="70" width="70"/>
+                                                        <img src={blackLionLogo} alt="legendary" height="70"
+                                                             width="70"/>
 
-                                                    <Grid item xs={12}>
-                                                        <Typography className="creatorFooter" align="center"
-                                                                    variant="subtitle1"
-                                                                    gutterBottom
-                                                                    color="inherit">
-                                                            Legendary Weapons
-                                                        </Typography>
+                                                        <Grid item xs={12}>
+                                                            <Typography className="creatorFooter" align="center"
+                                                                        variant="subtitle1"
+                                                                        gutterBottom
+                                                                        color="inherit">
+                                                                Legendary Weapons
+                                                            </Typography>
+                                                        </Grid>
                                                     </Grid>
-                                                </Grid>
                                                 </NavLink>
                                             </Grid>
                                         </Grid>
@@ -176,14 +182,18 @@ class Home extends Component {
                                 <Info guildInfo={this.props.guildInfo}/>
                             </Box>
                         </Grid>
-                        <Grid item xs={4}>
-                            <Box m={1.5}>
-                                <ImportantEvent/>
-                            </Box>
-                            <Box m={1.5}>
-                                <Notifications/>
-                            </Box>
-                        </Grid>
+                        {
+                            isLoggedIn && (
+                                <Grid item xs={12} md={4}>
+                                    <Box m={1.5}>
+                                        <ImportantEvent/>
+                                    </Box>
+                                    <Box m={1.5}>
+                                        <Notifications/>
+                                    </Box>
+                                </Grid>
+                            )
+                        }
                     </Grid>
                 </div>
             </Paper>

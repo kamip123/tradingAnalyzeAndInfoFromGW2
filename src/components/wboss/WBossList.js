@@ -55,7 +55,7 @@ class WBossList extends Component {
                             left: this.state.percent,
                             backgroundColor: 'red',
                             width: '5px',
-                            height: document.body.scrollHeight - 290
+                            height: document.body.scrollHeight - 330
                         }}/>
                     </div>
                 </div>

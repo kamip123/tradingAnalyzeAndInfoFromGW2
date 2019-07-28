@@ -15,7 +15,9 @@ import {NavLink} from "react-router-dom";
 
 const mapStateToProps = (state) => {
     return {
-        showDrawer: state.utility.showDrawer
+        showDrawer: state.utility.showDrawer,
+        isLoggedIn: state.firebase.auth.isEmpty,
+        profile: state.firebase.profile
     }
 };
 
@@ -33,6 +35,9 @@ class TemporaryDrawer extends Component {
     };
 
     render() {
+        const isLoggedIn = !this.props.isLoggedIn;
+        const { nick } = this.props.profile;
+
         return (
             <div>
                 <Drawer anchor="right" open={this.props.showDrawer} onClose={() => {
@@ -40,9 +45,23 @@ class TemporaryDrawer extends Component {
                 }}>
                     <List>
                         <Divider/>
+                        {
+                            isLoggedIn && (
+                                <div>
+                                    <NavLink to="/profile" style={{textDecoration: 'none'}}>
+                                        <ListItem button>
+                                            <ListItemIcon><Icon>person</Icon></ListItemIcon>
+                                            <ListItemText>{ nick }</ListItemText>
+                                        </ListItem>
+                                    </NavLink>
+                                    <Divider/>
+                                </div>
+                            )
+                        }
                         <NavLink to="/" style={{textDecoration: 'none'}}>
                             <ListItem button>
-                                <ListItemIcon><img edge="start" src="https://guilds.gw2w2w.com/guilds/beer-script/30.svg" alt="Logo"
+                                <ListItemIcon><img edge="start"
+                                                   src="https://guilds.gw2w2w.com/guilds/beer-script/30.svg" alt="Logo"
                                                    height="30"
                                                    width="30"/></ListItemIcon>
                                 <ListItemText>Home</ListItemText>
@@ -53,13 +72,6 @@ class TemporaryDrawer extends Component {
                             <ListItem button>
                                 <ListItemIcon><img src={dailyAchievement} alt="" height="30" width="30"/></ListItemIcon>
                                 <ListItemText>Daily Achievement</ListItemText>
-                            </ListItem>
-                        </NavLink>
-                        <Divider/>
-                        <NavLink to="/plans" style={{textDecoration: 'none'}}>
-                            <ListItem button>
-                                <ListItemIcon><Icon>schedule</Icon></ListItemIcon>
-                                <ListItemText>Plans</ListItemText>
                             </ListItem>
                         </NavLink>
                         <Divider/>
@@ -76,14 +88,77 @@ class TemporaryDrawer extends Component {
                                 <ListItemText>Legendary</ListItemText>
                             </ListItem>
                         </NavLink>
-                        <NavLink to="/login" style={{textDecoration: 'none'}}>
-                            <Divider/>
-                            <ListItem button>
-                                <ListItemIcon><Icon>exit_to_app</Icon></ListItemIcon>
-                                <ListItemText>Log in/Log Out</ListItemText>
-                            </ListItem>
-                        </NavLink>
-                        <Divider/>
+
+                        {
+                            isLoggedIn && (
+                                <div>
+                                    <Divider/>
+                                    <NavLink to="/plans" style={{textDecoration: 'none'}}>
+                                        <ListItem button>
+                                            <ListItemIcon><Icon>event</Icon></ListItemIcon>
+                                            <ListItemText>Plans</ListItemText>
+                                        </ListItem>
+                                    </NavLink>
+                                </div>
+                            )
+                        }
+
+                        {
+                            isLoggedIn && (
+                                <div>
+                                    <Divider/>
+                                    <NavLink to="/newPlan" style={{textDecoration: 'none'}}>
+                                        <ListItem button>
+                                            <ListItemIcon><Icon>note_add</Icon></ListItemIcon>
+                                            <ListItemText>Add new plan</ListItemText>
+                                        </ListItem>
+                                    </NavLink>
+                                </div>
+                            )
+                        }
+
+                        {
+                            isLoggedIn && (
+                                <div>
+                                    <Divider/>
+                                    <NavLink to="/logout" style={{textDecoration: 'none'}}>
+                                        <ListItem button>
+                                            <ListItemIcon><Icon>logout</Icon></ListItemIcon>
+                                            <ListItemText>Log Out</ListItemText>
+                                        </ListItem>
+                                    </NavLink>
+                                    <Divider/>
+                                </div>
+                            )
+                        }
+
+                        {
+                            !isLoggedIn && (
+                                <div>
+                                    <Divider/>
+                                    <NavLink to="/login" style={{textDecoration: 'none'}}>
+                                        <ListItem button>
+                                            <ListItemIcon><Icon>exit_to_app</Icon></ListItemIcon>
+                                            <ListItemText>Log in</ListItemText>
+                                        </ListItem>
+                                    </NavLink>
+                                </div>
+                            )
+                        }
+
+                        {
+                            !isLoggedIn && (
+                                <div>
+                                    <Divider/>
+                                    <NavLink to="/register" style={{textDecoration: 'none'}}>
+                                        <ListItem button>
+                                            <ListItemIcon><Icon>group_add</Icon></ListItemIcon>
+                                            <ListItemText>Register</ListItemText>
+                                        </ListItem>
+                                    </NavLink>
+                                </div>
+                            )
+                        }
                     </List>
                 </Drawer>
             </div>

@@ -10,7 +10,8 @@ import axios from "axios";
 class TradeList extends Component {
 
     state = {
-        itemsData: []
+        itemsData: [],
+        itemsPrices: []
     };
 
     /*
@@ -47,8 +48,18 @@ class TradeList extends Component {
             axios.get('https://api.guildwars2.com/v2/items?ids=' + this.ids[i] + '&lang=en')
                 .then(res => {
                     let itemsData = [...this.state.itemsData, res.data[0]];
+                    console.log(itemsData);
                     this.setState({
                         itemsData
+                    });
+                });
+
+            axios.get('https://api.guildwars2.com/v2/commerce/prices/' + this.ids[i])
+                .then(res => {
+                    let itemsPrices = [...this.state.itemsPrices, res.data];
+                    console.log(itemsPrices);
+                    this.setState({
+                        itemsPrices
                     });
                 })
         }
@@ -56,14 +67,14 @@ class TradeList extends Component {
 
     render() {
 
-        let items = this.state.itemsData.length ? (
-            this.state.itemsData.map(details => {
+        let items = this.state.itemsData.length === this.ids.length && this.state.itemsPrices.length === this.ids.length ? (
+            this.state.itemsData.map((details, index) => {
                 return (
-                    <Item details={details} price={{buy: 10, sell: 10, quantity: 10}} key={details.id}/>
+                    <Item details={details} price={this.state.itemsPrices[index]} key={details.id}/>
                 )
             })
         ) : (
-            <p>Encountered and error, please try refreshing the page.</p>
+            <p>Loading data...</p>
         );
 
         return (

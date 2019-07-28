@@ -6,6 +6,9 @@ import Typography from "@material-ui/core/Typography";
 import {NavLink} from "react-router-dom";
 
 class Item extends Component {
+    componentDidMount() {
+        console.log(this.props.price);
+    }
     render() {
         return (
             <Grid item xs={12} sm={6}>
@@ -32,7 +35,7 @@ class Item extends Component {
                                                 pathname: '/legendary/' + this.props.details.id,
                                                 state: {
                                                     details: this.props.details,
-                                                    price: {buy: 10, sell: 10, quantity: 10}
+                                                    price: this.props.price
                                                 }
                                             }} style={{textDecoration: 'none', color: 'black'}}>
 
@@ -45,7 +48,7 @@ class Item extends Component {
                                             pathname: '/legendary/' + this.props.details.id,
                                             state: {
                                                 details: this.props.details,
-                                                price: {buy: 10, sell: 10, quantity: 10}
+                                                price: this.props.price
                                             }
                                         }} style={{textDecoration: 'none', color: 'black'}}>
                                             <img className="image" src={this.props.details.icon} alt="icon"/>
@@ -86,15 +89,15 @@ class Item extends Component {
                                         </tr>
                                         <tr>
                                             <th>Buy:</th>
-                                            <td>{this.props.price.buy}</td>
+                                            <td>{this.props.price.buys.unit_price}</td>
                                         </tr>
                                         <tr>
                                             <th>Sell:</th>
-                                            <td>{this.props.price.sell}</td>
+                                            <td>{this.props.price.sells.unit_price}</td>
                                         </tr>
                                         <tr>
                                             <th>Quantity:</th>
-                                            <td>{this.props.price.quantity}</td>
+                                            <td>{this.props.price.sells.quantity}</td>
                                         </tr>
                                         </tbody>
                                     </table>
