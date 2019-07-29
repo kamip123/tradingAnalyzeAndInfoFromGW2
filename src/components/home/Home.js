@@ -6,7 +6,6 @@ import Info from "./Info";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
-import ImportantEvent from "./ImportantEvent";
 import "./Home.css"
 import axios from 'axios'
 import {connect} from 'react-redux'
@@ -186,9 +185,19 @@ class Home extends Component {
                             isLoggedIn && (
                                 <Grid item xs={12} md={4}>
                                     <Box m={1.5}>
-                                        <ImportantEvent/>
+                                        <Box p={2}>
+                                            <Typography variant="h3" align="center" component="h3">
+                                                Important:
+                                            </Typography>
+                                        </Box>
+                                        <Notifications/>
                                     </Box>
                                     <Box m={1.5}>
+                                        <Box p={2}>
+                                            <Typography variant="h3" align="center" component="h3">
+                                                Notifications
+                                            </Typography>
+                                        </Box>
                                         <Notifications/>
                                     </Box>
                                 </Grid>

@@ -1,6 +1,5 @@
 import {Component} from "react";
 import React from "react";
-import Paper from "@material-ui/core/Paper";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Box from "@material-ui/core/Box";
