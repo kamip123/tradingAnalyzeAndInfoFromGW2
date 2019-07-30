@@ -17,7 +17,9 @@ const Notifications = (props) => {
         <div>
             {notifications && notifications.map(notification => {
                 let path = '';
-                if(notification.eventId === '') {
+                if(notification.isImportant){
+                    path = '/plans/' + notification.id;
+                } else if(notification.eventId === '') {
                     path = '/profiles/' + notification.userId;
                 } else {
                     path = '/plans/' + notification.eventId;
