@@ -5,6 +5,7 @@ import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import Card from "@material-ui/core/Card";
 import Box from "@material-ui/core/Box";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 class MotDay extends Component {
     render() {
@@ -21,6 +22,9 @@ class MotDay extends Component {
                             {this.props.motd.split('\n').map((item, key) => {
                                 return <span key={key}>{item}<br/></span>
                             })}
+                            {this.props.motd === '' && (
+                                <CircularProgress />
+                            )}
                         </Typography>
                     </CardContent>
                 </Card>

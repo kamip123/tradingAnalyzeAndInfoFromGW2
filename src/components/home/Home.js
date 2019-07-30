@@ -15,22 +15,9 @@ import blackLionLogo from '../../images/blackLionLogo.png'
 import bosses from '../../images/Bosses.png'
 import plans from '../../images/plans.png'
 import {NavLink} from "react-router-dom";
-
-
-const mapStateToProps = (state) => {
-    return {
-        isLoggedIn: state.firebase.auth.isEmpty,
-        guildInfo: state.guild.guildInfo
-    }
-};
-
-const mapDispatchToProps = (dispatch) => {
-    return {
-        changeGuildInfo: (info) => {
-            dispatch({type: 'CHANGE_GUILD', info: info})
-        }
-    }
-};
+import {compose} from "redux";
+import {firestoreConnect} from "react-redux-firebase";
+import Button from "@material-ui/core/Button";
 
 class Home extends Component {
     componentDidMount() {
@@ -38,12 +25,12 @@ class Home extends Component {
             .then(res => {
                 this.props.changeGuildInfo(res.data);
             }).catch((error) => {
-            console.log(error);
         });
     }
 
     render() {
         const isLoggedIn = !this.props.isLoggedIn;
+        const {plansList, notifications} = this.props;
         return (
             <Paper>
                 <div className="containerDiv">
@@ -60,7 +47,10 @@ class Home extends Component {
                             </Box>
                             <Box m={1.5}>
                                 <Paper>
-                                    <Box p={2}>
+                                    <Box m={1.5} p={2}>
+                                        <Info guildInfo={this.props.guildInfo}/>
+                                    </Box>
+                                    <Box p={2} m={1.5} borderBottom={1}>
                                         <Grid
                                             container
                                             direction="row"
@@ -75,6 +65,7 @@ class Home extends Component {
                                                     </Typography>
                                                 </Box>
                                             </Grid>
+
                                             <Grid item xs={6} md={3}>
                                                 <NavLink to="/daily" style={{textDecoration: 'none', color: 'black'}}>
                                                     <Grid
@@ -175,30 +166,80 @@ class Home extends Component {
                                             </Grid>
                                         </Grid>
                                     </Box>
+                                    <Grid
+                                        container
+                                        direction="row"
+                                        justify="center"
+                                        alignItems="center"
+                                        spacing={1}
+                                    >
+                                        <Grid item xs={12}>
+                                            <Typography align="center"
+                                                        variant="h4"
+                                                        gutterBottom
+                                                        color="inherit">
+                                                For more please
+                                                <NavLink to="/login"
+                                                         style={{textDecoration: 'none', color: 'black'}}>
+                                                    <Button variant="contained" color="primary"
+                                                            style={{margin: '10px'}}>
+                                                        Login
+                                                    </Button>
+                                                </NavLink>
+                                                or
+                                                <NavLink to="/register"
+                                                         style={{textDecoration: 'none', color: 'black'}}>
+                                                    <Button variant="contained" color="primary"
+                                                            style={{margin: '10px'}}>
+                                                        Register
+                                                    </Button>
+                                                </NavLink>
+                                            </Typography>
+                                        </Grid>
+                                    </Grid>
                                 </Paper>
-                            </Box>
-                            <Box m={1.5}>
-                                <Info guildInfo={this.props.guildInfo}/>
                             </Box>
                         </Grid>
                         {
                             isLoggedIn && (
                                 <Grid item xs={12} md={4}>
                                     <Box m={1.5}>
-                                        <Box p={2}>
-                                            <Typography variant="h3" align="center" component="h3">
-                                                Important:
-                                            </Typography>
-                                        </Box>
-                                        <Notifications/>
+                                        <Paper>
+                                            <Box p={2}>
+                                                <Typography variant="h3" align="center" component="h3">
+                                                    Important:
+                                                </Typography>
+                                            </Box>
+                                            <Notifications notifications={plansList}/>
+                                        </Paper>
                                     </Box>
+                                </Grid>
+                            )
+                        }
+                        {
+                            isLoggedIn && (
+                                <Grid item xs={12}>
                                     <Box m={1.5}>
-                                        <Box p={2}>
-                                            <Typography variant="h3" align="center" component="h3">
-                                                Notifications
-                                            </Typography>
-                                        </Box>
-                                        <Notifications/>
+                                        <Paper>
+                                            <Grid
+                                                container
+                                                direction="row"
+                                                justify="center"
+                                                alignItems="center"
+                                                spacing={1}
+                                            >
+                                                <Grid item xs={12}>
+                                                    <Box p={2}>
+                                                        <Typography variant="h3" align="center" component="h3">
+                                                            News:
+                                                        </Typography>
+                                                    </Box>
+                                                </Grid>
+                                                <Grid item xs={12} md={8} lg={6}>
+                                                    <Notifications notifications={notifications}/>
+                                                </Grid>
+                                            </Grid>
+                                        </Paper>
                                     </Box>
                                 </Grid>
                             )
@@ -210,4 +251,27 @@ class Home extends Component {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+const mapStateToProps = (state) => {
+    return {
+        isLoggedIn: state.firebase.auth.isEmpty,
+        notifications: state.firestore.ordered.notifications,
+        plansList: state.firestore.ordered.plans,
+        guildInfo: state.guild.guildInfo
+    }
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        changeGuildInfo: (info) => {
+            dispatch({type: 'CHANGE_GUILD', info: info})
+        }
+    }
+};
+
+export default compose(
+    connect(mapStateToProps, mapDispatchToProps),
+    firestoreConnect([
+        {collection: 'notifications', limit: 5, orderBy: ['date', 'desc']},
+        {collection: 'plans', limit: 4, where: ['isImportant', '==', true], orderBy: ['date', 'desc']}
+    ])
+)(Home);

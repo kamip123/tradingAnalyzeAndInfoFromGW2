@@ -6,6 +6,7 @@ import Item from "./Item";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import axios from "axios";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 class TradeList extends Component {
 
@@ -14,11 +15,6 @@ class TradeList extends Component {
         itemsPrices: []
     };
 
-    /*
-    ids = [
-        30698
-    ];
-    */
     ids = [
         30698,
         30697,
@@ -48,7 +44,7 @@ class TradeList extends Component {
             axios.get('https://api.guildwars2.com/v2/items?ids=' + this.ids[i] + '&lang=en')
                 .then(res => {
                     let itemsData = [...this.state.itemsData, res.data[0]];
-                    console.log(itemsData);
+
                     this.setState({
                         itemsData
                     });
@@ -57,7 +53,7 @@ class TradeList extends Component {
             axios.get('https://api.guildwars2.com/v2/commerce/prices/' + this.ids[i])
                 .then(res => {
                     let itemsPrices = [...this.state.itemsPrices, res.data];
-                    console.log(itemsPrices);
+
                     this.setState({
                         itemsPrices
                     });
@@ -70,11 +66,28 @@ class TradeList extends Component {
         let items = this.state.itemsData.length === this.ids.length && this.state.itemsPrices.length === this.ids.length ? (
             this.state.itemsData.map((details, index) => {
                 return (
-                    <Item details={details} price={this.state.itemsPrices[index]} key={details.id}/>
+                    <Item details={details} price={this.state.itemsPrices.find(function (element) {
+
+                        if (element.id === details.id) {
+
+                            return element
+                        }
+                        return false;
+                    })} key={details.id}/>
                 )
             })
         ) : (
-            <p>Loading data...</p>
+            <Grid
+                container
+                direction="row"
+                justify="center"
+                alignItems="center"
+                spacing={1}
+            >
+                <Box p={2}>
+                    <CircularProgress/>
+                </Box>
+            </Grid>
         );
 
         return (

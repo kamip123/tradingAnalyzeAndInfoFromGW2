@@ -5,6 +5,9 @@ import Achievement from "./Achievement";
 import axios from "axios";
 import Tab from "@material-ui/core/Tab";
 import Tabs from "@material-ui/core/Tabs";
+import Box from "@material-ui/core/Box";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import Grid from "@material-ui/core/Grid";
 
 class DailyList extends Component {
 
@@ -91,7 +94,6 @@ class DailyList extends Component {
                 }
 
             }).catch((error) => {
-            console.log(error);
         });
     }
 
@@ -107,6 +109,7 @@ class DailyList extends Component {
         let PVPLength = false;
         let WVWLength = false;
         let specialLength = false;
+        let showLoading = true;
 
         let fractals = this.state.questsFRACTALSd.length ? (
             this.state.questsFRACTALSd.map(achi => {
@@ -148,6 +151,10 @@ class DailyList extends Component {
             specialLength = true
         );
 
+        if(!specialLength || !WVWLength || !PVPLength || !PVELength || !FractalLength){
+            showLoading = false;
+        }
+
         return (
             <Paper square>
                 <Tabs value={this.state.value} onChange={this.handleChange} textColor="primary" centered>
@@ -164,6 +171,19 @@ class DailyList extends Component {
                     {this.state.value === 3 && <div>{fractals}</div>}
                     {this.state.value === 4 && <div>{special}</div>}
                 </div>
+                {showLoading && (
+                    <Grid
+                        container
+                        direction="row"
+                        justify="center"
+                        alignItems="center"
+                        spacing={1}
+                    >
+                        <Box p={2}>
+                            <CircularProgress/>
+                        </Box>
+                    </Grid>
+                )}
             </Paper>
         );
     }

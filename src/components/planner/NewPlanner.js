@@ -6,9 +6,9 @@ import Button from "@material-ui/core/Button";
 import Switch from "@material-ui/core/Switch";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
-import { createPlan } from "../../store/actions/planActions";
-import { connect } from 'react-redux'
-import { Redirect } from "react-router-dom";
+import {createPlan} from "../../store/actions/planActions";
+import {connect} from 'react-redux'
+import {Redirect} from "react-router-dom";
 
 class NewPlanner extends Component {
 
@@ -30,8 +30,6 @@ class NewPlanner extends Component {
                 [event.target.name]: event.target.value
             });
         }
-
-
     };
 
     handleSubmit = (event) => {
@@ -42,9 +40,9 @@ class NewPlanner extends Component {
 
     render() {
 
-        const { auth } = this.props;
+        const {auth} = this.props;
 
-        if ( !auth.uid) return <Redirect to='/login' />;
+        if (!auth.uid) return <Redirect to='/login'/>;
 
         return (
             <Paper>
@@ -132,7 +130,7 @@ const mapsStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => {
-    return{
+    return {
         createPlan: (plan) => dispatch(createPlan(plan))
     }
 };

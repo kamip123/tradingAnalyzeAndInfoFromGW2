@@ -6,9 +6,6 @@ import Typography from "@material-ui/core/Typography";
 import {NavLink} from "react-router-dom";
 
 class Item extends Component {
-    componentDidMount() {
-        console.log(this.props.price);
-    }
     render() {
         return (
             <Grid item xs={12} sm={6}>

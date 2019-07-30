@@ -24,7 +24,6 @@ class Boss extends Component {
         this.setState({
             bcolor: newList
         });
-        console.log(this.state.bcolor)
     };
 
     componentDidMount() {
@@ -41,7 +40,7 @@ class Boss extends Component {
                 let numb = String(newPercentage) + '%';
 
                 return (
-                    <div style={{backgroundColor: colorRand, position: 'absolute', left: numb}}>
+                    <div style={{backgroundColor: colorRand, position: 'absolute', left: numb}} key={index}>
                         <Typography variant="h4" component="h4" align="center">
                             {time}
                         </Typography>

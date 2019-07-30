@@ -12,6 +12,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
+import Paper from "@material-ui/core/Paper";
 
 let CanvasJS = CanvasJSReact.CanvasJS;
 let CanvasJSChart = CanvasJSReact.CanvasJSChart;
@@ -133,7 +134,6 @@ class ItemDetails extends Component {
             tempResultsValue = 0;
             tempItemQuantity = 0;
         }
-        console.log(sellAVGapi);
         this.setState({
             sellAVG: sellAVGapi,
             quantity: quantityAVGapi
@@ -176,7 +176,6 @@ class ItemDetails extends Component {
             tempResultsQuantity = 0;
             tempResultsValue = 0;
         }
-        console.log(buyAVGapi);
         this.setState({
             buyAVG: buyAVGapi
         });
@@ -277,7 +276,6 @@ class ItemDetails extends Component {
     }
 
     handleChange = (event) => {
-        console.log(event);
         this.setState({
             [event.target.name]: event.target.value
         });
@@ -296,7 +294,7 @@ class ItemDetails extends Component {
 
         const yearList = allYears.map((x) => {
             return (
-                <MenuItem value={x}>{x}</MenuItem>
+                <MenuItem value={x} key={x}>{x}</MenuItem>
             )
         });
 
@@ -356,6 +354,7 @@ class ItemDetails extends Component {
             }]
         };
         return (
+            <Paper>
             <Grid item xs={12}>
                 <Box borderBottom={1} p={2}>
                     <Card>
@@ -442,6 +441,7 @@ class ItemDetails extends Component {
                     </Card>
                 </Box>
             </Grid>
+            </Paper>
         );
     }
 }

@@ -7,6 +7,7 @@ import PlanerListItem from "./PlanerListItem";
 import {firestoreConnect} from "react-redux-firebase";
 import {compose} from "redux";
 import {Redirect} from "react-router-dom";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 class PlannerList extends Component {
 
@@ -25,7 +26,17 @@ class PlannerList extends Component {
                 )
             })
         ) : (
-            <p>No plans</p>
+            <Grid
+                container
+                direction="row"
+                justify="center"
+                alignItems="center"
+                spacing={1}
+            >
+                <Box p={2}>
+                    <CircularProgress/>
+                </Box>
+            </Grid>
         );
 
         return (
@@ -69,6 +80,6 @@ const mapStateToProps = (state) => {
 export default compose(
     connect(mapStateToProps),
     firestoreConnect([
-        {collection: 'plans'}
+        {collection: 'plans', limit: 20, orderBy: ['date', 'desc']}
     ])
 )(PlannerList);

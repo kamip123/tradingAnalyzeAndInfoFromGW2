@@ -7,13 +7,11 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 
-
 class WBossList extends Component {
 
     state = {
         percent: '0%'
     };
-
 
     updateTimer = () => {
         const minutesInDay = 1440;
@@ -28,12 +26,18 @@ class WBossList extends Component {
         this.setState({
             percent: numb
         });
-        console.log(document.body.scrollHeight);
         setTimeout(this.updateTimer, 60000)
     };
 
     componentDidMount() {
         this.updateTimer();
+    }
+
+    componentWillUnmount() {
+        let id = window.setTimeout(function() {}, 0);
+        while (id--) {
+            clearTimeout(id);
+        }
     }
 
     render() {
@@ -45,6 +49,10 @@ class WBossList extends Component {
             shatter: ['03:00', '06:00', '09:00', '12:00', '15:00', '18:00', '21:00', '00:00'],
             jormag: ['04:30', '07:30', '10:30', '13:30', '16:30', '19:30', '22:30', '01:30']
         };
+        const time = new Date();
+        const hour = time.getHours();
+        const minute = ('0' + time.getMinutes()).substr(-2);
+
         return (
             <Paper>
                 <div style={{padding: '20px'}}>
@@ -55,7 +63,7 @@ class WBossList extends Component {
                             left: this.state.percent,
                             backgroundColor: 'red',
                             width: '5px',
-                            height: document.body.scrollHeight - 330
+                            height: '965px'
                         }}/>
                     </div>
                 </div>
@@ -74,7 +82,17 @@ class WBossList extends Component {
                     <Grid item xs={12}>
                         <Card>
                             <CardContent>
-                                <div style={{backgroundColor: 'red', width: this.state.percent, height: 30}}/>
+                                <div style={{backgroundColor: 'red', width: this.state.percent, height: 30}}>
+                                    <Grid
+                                        container
+                                        direction="row"
+                                        justify="center"
+                                        alignItems="center"
+                                        spacing={1}
+                                    >
+                                        <h3 style={{margin: '5px'}}>{hour}:{minute}</h3>
+                                    </Grid>
+                                </div>
                             </CardContent>
                         </Card>
                     </Grid>
